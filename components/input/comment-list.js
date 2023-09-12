@@ -2,7 +2,6 @@ import classes from "./comment-list.module.css";
 
 function CommentList(comments) {
   const commentsList = comments.comments;
-  console.log(commentsList);
 
   return (
     <ul className={classes.comments}>
