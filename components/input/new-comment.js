@@ -36,7 +36,7 @@ function NewComment(props) {
   }
 
   return (
-    <form className={classes.form}>
+    <form className={classes.form} onSubmit={sendCommentHandler}>
       <div className={classes.row}>
         <div className={classes.control}>
           <label htmlFor="email">Your email</label>
@@ -52,7 +52,11 @@ function NewComment(props) {
         <textarea id="comment" rows="5" ref={commentInputRef}></textarea>
       </div>
       {isInvalid && <p>Please enter a valid email address and comment!</p>}
-      <button onClick={sendCommentHandler}>Submit</button>
+      <div>
+        <button className={classes.submitButton} type="submit">
+          Submit
+        </button>
+      </div>
     </form>
   );
 }

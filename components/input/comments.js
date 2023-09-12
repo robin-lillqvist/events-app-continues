@@ -9,23 +9,25 @@ function Comments(props) {
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
   const [success, setSuccess] = useState(false);
+  const [loadComments, setLoadComments] = useState(true);
 
   useEffect(() => {
-    if (showComments) {
-      fetch("/api/comments/" + eventId)
+    if (showComments && loadComments) {
+      fetch(`/api/comments/${eventId}`)
         .then((response) => response.json())
         .then((data) => {
           setComments(data.comments);
         });
+      setLoadComments(false);
     }
-  }, [showComments, setSuccess]);
+  }, [showComments, loadComments]);
 
   async function toggleCommentsHandler() {
     setShowComments((prevStatus) => !prevStatus);
   }
 
   async function addCommentHandler(commentData) {
-    fetch("/api/comments/", {
+    fetch(`/api/comments/${eventId}`, {
       method: "POST",
       body: JSON.stringify(commentData),
       headers: {
@@ -33,12 +35,16 @@ function Comments(props) {
       },
     })
       .then((response) => response.json())
-      .then((data) => data.status === "Success");
+      .then((data) => setSuccess(true));
+
+    setLoadComments(true);
   }
 
   return (
     <section className={classes.comments}>
-      <button onClick={toggleCommentsHandler}>{showComments ? "Hide" : "Show"} Comments</button>
+      <button className={classes.hideButton} onClick={toggleCommentsHandler}>
+        {showComments ? "Hide" : "Show"} Comments
+      </button>
       {showComments && <NewComment onAddComment={addCommentHandler} />}
       {showComments && !!comments && <CommentList comments={comments} />}
       {showComments && success && <p>Success sending comment</p>}

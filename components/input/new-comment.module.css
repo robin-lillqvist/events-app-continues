@@ -38,5 +38,18 @@
 }
 
 .form button {
+  font: inherit;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  background-color: #03be9f;
+  color: white;
+  border: 1px solid white;
+}
+
+.form button:hover,
+.form button:active {
   background-color: white;
+  color: #03be9f;
+  border: 1px solid #03be9f;
 }

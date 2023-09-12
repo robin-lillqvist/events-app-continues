@@ -15,9 +15,9 @@ export async function getAllComments() {
   return comments;
 }
 
-export async function getCommentsByEventId(id) {
+export async function getCommentsByEventId(activeEventId) {
   const allComments = await getAllComments();
-  const filteredComment = allComments.filter((event) => event.eventId === id);
+  const filteredComment = allComments.filter((event) => event.eventId === activeEventId);
   return filteredComment;
 }
 
