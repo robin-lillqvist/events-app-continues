@@ -6,20 +6,12 @@ function CommentList(comments) {
   return (
     <ul className={classes.comments}>
       {commentsList.map((comment) => (
-        <>
-          <li>
-            <p>My comment is amazing!</p>
-            <div>
-              By <address>Maximilian</address>
-            </div>
-          </li>
-          <li>
-            <p>My comment is amazing!</p>
-            <div>
-              By <address>Maximilian</address>
-            </div>
-          </li>
-        </>
+        <li key={comment.id}>
+          <p>{comment.value}</p>
+          <div>
+            By <address>{comment.name}</address>
+          </div>
+        </li>
       ))}
     </ul>
   );
