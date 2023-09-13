@@ -12,3 +12,15 @@ export async function insertDocument(client, collection, document) {
   const results = await db.collection(collection).insertOne(document);
   return results;
 }
+
+export async function getCommentsFromId(client, collection, id) {
+  const eventId = id;
+  const db = client.db();
+  const commentsForEventId = await db
+    .collection(collection)
+    .find()
+    .filter({ eventId: eventId })
+    .sort({ _id: -1 })
+    .toArray();
+  return commentsForEventId;
+}

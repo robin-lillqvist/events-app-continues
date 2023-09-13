@@ -1,4 +1,4 @@
-import { connectDatabase, insertDocument } from "../../../helpers/database/db-utils";
+import { connectDatabase, insertDocument, getCommentsFromId } from "../../../helpers/database/db-utils";
 
 async function handler(req, res) {
   const eventId = req.query.eventId;
@@ -28,9 +28,8 @@ async function handler(req, res) {
       res.status(500).json({ success: false, message: "Inserting data failed", results: insertResults });
     }
   } else if (req.method === "GET") {
-    const db = client.db();
-    const allComments = await db.collection("comments").find().filter({ eventId: eventId }).sort({ _id: -1 }).toArray();
-    res.status(200).json({ success: true, comments: allComments });
+    const commentsFromId = await getCommentsFromId(client, "comments", eventId);
+    res.status(200).json({ success: true, comments: commentsFromId });
   }
   client.close();
 }
