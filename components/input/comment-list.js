@@ -5,14 +5,15 @@ function CommentList(comments) {
 
   return (
     <ul className={classes.comments}>
-      {commentsList.map((comment) => (
-        <li key={comment.id}>
-          <p>{comment.text}</p>
-          <div>
-            By <address>{comment.name}</address>
-          </div>
-        </li>
-      ))}
+      {!!commentsList &&
+        commentsList.map((comment) => (
+          <li key={comment.id}>
+            <p>{comment.text}</p>
+            <div>
+              By <address>{comment.name}</address>
+            </div>
+          </li>
+        ))}
     </ul>
   );
 }

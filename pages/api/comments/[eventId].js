@@ -1,31 +1,37 @@
-import { MongoClient } from "mongodb";
-import { getCommentsByEventId } from "../../../helpers/comments/api-utils";
+import { connectDatabase, insertDocument } from "../../../helpers/database/db-utils";
 
 async function handler(req, res) {
   const eventId = req.query.eventId;
+  let client;
 
-  const client = await MongoClient.connect(
-    "mongodb+srv://robinlillqvist:Bnt2iqgZxm3ecdMQ@cluster0.iemo3mj.mongodb.net/events?retryWrites=true&w=majority"
-  );
+  try {
+    client = await connectDatabase();
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Connecting to the DB failed" });
+    return;
+  }
 
   if (req.method === "POST") {
     const { email, name, text } = req.body;
     if (!email.includes("@") || !name || name.trim() === "" || !text || text.trim() === "") {
       res.status(422).json({ message: "Invalid input" });
+      client.close();
       return;
     }
-    const newComment = { eventId, email, name, text };
+    const newComment = { eventId, email, name, text, date: new Date() };
 
-    const db = client.db();
-    const results = await db.collection("comments").insertOne(newComment);
-    console.log(results.insertedId);
-
-    res.status(201).json({ success: true, message: "Added comment", comment: newComment });
+    let insertResults;
+    try {
+      insertResults = await insertDocument(client, "comments", newComment);
+      res.status(201).json({ success: true, message: "Added comment", comment: newComment, results: insertResults });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Inserting data failed", results: insertResults });
+    }
   } else if (req.method === "GET") {
-    const comment = await getCommentsByEventId(eventId);
-    res.status(200).json({ success: true, comments: comment });
+    const db = client.db();
+    const allComments = await db.collection("comments").find().filter({ eventId: eventId }).sort({ _id: -1 }).toArray();
+    res.status(200).json({ success: true, comments: allComments });
   }
-
   client.close();
 }
 

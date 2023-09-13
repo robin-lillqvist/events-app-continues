@@ -7,7 +7,7 @@ function Comments(props) {
   const { eventId } = props;
 
   const [showComments, setShowComments] = useState(false);
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState();
   const [success, setSuccess] = useState(false);
   const [loadComments, setLoadComments] = useState(true);
 
